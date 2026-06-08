@@ -61,7 +61,7 @@ export default function MaintenanceSection({ productId, readOnly = false }) {
       {submitted && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-3 mb-3 text-center">
           <p className="text-sm text-green-700 font-medium">✓ تم إرسال طلب الصيانة بنجاح</p>
-          <p className="text-xs text-green-500 mt-0.5">سيتم مراجعته من قبل صاحب الجهاز</p>
+          <p className="text-xs text-green-500 mt-0.5">سيتم مراجعته من قبل صاحب الصلاحية</p>
         </div>
       )}
 
