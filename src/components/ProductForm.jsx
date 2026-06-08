@@ -66,10 +66,27 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">انتهاء الضمان</label>
-              <input type="date" value={form.warranty_date} onChange={e => set('warranty_date', e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
-            </div>
+  <label className="block text-sm font-semibold text-gray-700 mb-1">مدة الضمان</label>
+  <select
+    onChange={e => {
+      if (!e.target.value) { set('warranty_date', ''); return }
+      const base = form.purchase_date || new Date().toISOString().split('T')[0]
+      const d = new Date(base)
+      d.setFullYear(d.getFullYear() + parseInt(e.target.value))
+      set('warranty_date', d.toISOString().split('T')[0])
+    }}
+    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
+    <option value="">بدون ضمان</option>
+    <option value="1">سنة واحدة</option>
+    <option value="2">سنتان</option>
+    <option value="3">ثلاث سنوات</option>
+    <option value="4">أربع سنوات</option>
+    <option value="5">خمس سنوات</option>
+  </select>
+  {form.warranty_date && (
+    <p className="text-xs text-gray-400 mt-1">ينتهي في: {form.warranty_date}</p>
+  )}
+</div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
