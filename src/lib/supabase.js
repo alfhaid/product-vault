@@ -1,0 +1,55 @@
+import { createClient } from '@supabase/supabase-js'
+
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+// ── Products ──────────────────────────────────────────────────────────────────
+
+export async function getProducts() {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data
+}
+
+export async function getProduct(id) {
+  const { data, error } = await supabase
+    .from('products')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function upsertProduct(product) {
+  const { data, error } = await supabase
+    .from('products')
+    .upsert(product)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteProduct(id) {
+  const { error } = await supabase.from('products').delete().eq('id', id)
+  if (error) throw error
+}
+
+// ── Tags ──────────────────────────────────────────────────────────────────────
+
+export async function getTags() {
+  const { data, error } = await supabase.from('tags').select('name').order('name')
+  if (error) throw error
+  return data.map(t => t.name)
+}
+
+export async function addTag(name) {
+  const { error } = await supabase.from('tags').upsert({ name })
+  if (error) throw error
+}
