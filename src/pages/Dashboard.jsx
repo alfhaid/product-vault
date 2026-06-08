@@ -231,6 +231,10 @@ export default function Dashboard() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
               إضافة منتج
             </button>
+<button onClick={() => setShowTags(true)}
+  className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التاغات">
+  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+</button>
             <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false) }}
               className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تسجيل خروج">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -300,11 +304,11 @@ export default function Dashboard() {
                 <p className="text-gray-400 text-sm mb-4">
                   {search || filterTag || filterWarranty !== 'all' ? 'جرب تغيير البحث أو الفلاتر' : 'ابدأ بإضافة منتجك الأول'}
                 </p>
-                {!search && !filterTag && filterWarranty === 'all' && (
+                
                   <button onClick={() => setShowForm(true)} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">إضافة منتج</button>
             <button onClick={() => setShowTags(true)}
               className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التاغات">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          
             </button>
                 )}
               </div>
