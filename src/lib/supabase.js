@@ -77,14 +77,31 @@ export async function renameTag(oldName, newName) {
 
 // ── Maintenance ───────────────────────────────────────────────────────────────
 
-export async function getMaintenanceRecords(productId) {
-  const { data, error } = await supabase
+export async function getMaintenanceRecords(productId, status = null) {
+  let query = supabase
     .from('maintenance')
     .select('*')
     .eq('product_id', productId)
     .order('date', { ascending: false })
+  if (status) query = query.eq('status', status)
+  const { data, error } = await query
   if (error) throw error
   return data
+}
+
+export async function getPendingMaintenance() {
+  const { data, error } = await supabase
+    .from('maintenance')
+    .select('*, products(name)')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data
+}
+
+export async function approveMaintenance(id) {
+  const { error } = await supabase.from('maintenance').update({ status: 'approved' }).eq('id', id)
+  if (error) throw error
 }
 
 export async function addMaintenanceRecord(record) {

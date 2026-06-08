@@ -4,6 +4,7 @@ import { daysLeft, formatDate } from '../lib/utils'
 import { TagBadge, WarrantyBadge, Spinner } from '../components/UI'
 import ProductForm from '../components/ProductForm'
 import QRModal from '../components/QRModal'
+import { getPendingMaintenance, approveMaintenance, deleteMaintenanceRecord } from '../lib/supabase'
 import TagsModal from '../components/TagsModal'
 
 const CORRECT_PASSWORD = '651983'
@@ -34,7 +35,7 @@ function LoginScreen({ onLogin }) {
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
         </div>
-        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Fahad Alfhaid</h1>
+        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Product Vault</h1>
         <p className="text-sm text-gray-400 text-center mb-6">أدخل كلمة المرور للمتابعة</p>
         <input
           type="password"
@@ -133,6 +134,8 @@ export default function Dashboard() {
   const [editProduct, setEditProduct] = useState(null)
   const [qrProduct, setQrProduct] = useState(null)
   const [showTags, setShowTags] = useState(false)
+  const [pendingMaintenance, setPendingMaintenance] = useState([])
+  const [showPending, setShowPending] = useState(false)
   const [toast, setToast] = useState(null)
 
   const load = useCallback(async () => {
@@ -147,7 +150,12 @@ export default function Dashboard() {
     }
   }, [])
 
-  useEffect(() => { if (authed) load() }, [authed, load])
+  useEffect(() => {
+    if (authed) {
+      load()
+      getPendingMaintenance().then(setPendingMaintenance)
+    }
+  }, [authed, load])
 
   if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />
 
@@ -204,7 +212,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />}
+      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />
       {showTags && <TagsModal tags={tags} onClose={() => setShowTags(false)} onRefresh={load} />}
 
       {(showForm || editProduct) && (
@@ -221,8 +229,8 @@ export default function Dashboard() {
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
             <div>
-              <h1 className="font-black text-gray-900 text-lg leading-none">Fahad Alfhaid</h1>
-              <p className="text-xs text-gray-400">2026</p>
+              <h1 className="font-black text-gray-900 text-lg leading-none">Product Vault</h1>
+              <p className="text-xs text-gray-400">مخزن المنتجات الشخصي</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -231,10 +239,6 @@ export default function Dashboard() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
               إضافة منتج
             </button>
-<button onClick={() => setShowTags(true)}
-  className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التصنيفات">
-  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-</button>
             <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false) }}
               className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تسجيل خروج">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -266,13 +270,13 @@ export default function Dashboard() {
               <div className="relative">
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2" strokeLinecap="round"/></svg>
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="ابحث بالاسم، التصنيف، المتجر..."
+                  placeholder="ابحث بالاسم، التاغ، المتجر..."
                   className="w-full pr-10 pl-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
               </div>
               <div className="flex flex-wrap gap-2">
                 <select value={filterTag} onChange={e => setFilterTag(e.target.value)}
                   className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
-                  <option value="">كل التصنيفات</option>
+                  <option value="">كل التاغز</option>
                   {tags.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
                 <select value={filterWarranty} onChange={e => setFilterWarranty(e.target.value)}
@@ -304,11 +308,17 @@ export default function Dashboard() {
                 <p className="text-gray-400 text-sm mb-4">
                   {search || filterTag || filterWarranty !== 'all' ? 'جرب تغيير البحث أو الفلاتر' : 'ابدأ بإضافة منتجك الأول'}
                 </p>
-                
+                {!search && !filterTag && filterWarranty === 'all' && (
                   <button onClick={() => setShowForm(true)} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">إضافة منتج</button>
+            <button onClick={() => setShowPending(!showPending)} className="relative p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="طلبات الصيانة">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              {pendingMaintenance.length > 0 && (
+                <span className="absolute -top-1 -left-1 w-4 h-4 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{pendingMaintenance.length}</span>
+              )}
+            </button>
             <button onClick={() => setShowTags(true)}
-              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التصنيفات">
-          
+              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التاغات">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
                 )}
               </div>
