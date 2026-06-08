@@ -74,3 +74,30 @@ export async function renameTag(oldName, newName) {
   // Delete old tag
   await supabase.from('tags').delete().eq('name', oldName)
 }
+
+// ── Maintenance ───────────────────────────────────────────────────────────────
+
+export async function getMaintenanceRecords(productId) {
+  const { data, error } = await supabase
+    .from('maintenance')
+    .select('*')
+    .eq('product_id', productId)
+    .order('date', { ascending: false })
+  if (error) throw error
+  return data
+}
+
+export async function addMaintenanceRecord(record) {
+  const { data, error } = await supabase
+    .from('maintenance')
+    .insert(record)
+    .select()
+    .single()
+  if (error) throw error
+  return data
+}
+
+export async function deleteMaintenanceRecord(id) {
+  const { error } = await supabase.from('maintenance').delete().eq('id', id)
+  if (error) throw error
+}

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { today, uid } from '../lib/utils'
 import { TagBadge } from './UI'
+import MaintenanceSection from './MaintenanceSection'
 
 export default function ProductForm({ product, allTags, onSave, onCancel, onAddTag }) {
   const [form, setForm] = useState(product ? {
@@ -66,27 +67,10 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
             </div>
             <div>
-  <label className="block text-sm font-semibold text-gray-700 mb-1">مدة الضمان</label>
-  <select
-    onChange={e => {
-      if (!e.target.value) { set('warranty_date', ''); return }
-      const base = form.purchase_date || new Date().toISOString().split('T')[0]
-      const d = new Date(base)
-      d.setFullYear(d.getFullYear() + parseInt(e.target.value))
-      set('warranty_date', d.toISOString().split('T')[0])
-    }}
-    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
-    <option value="">بدون ضمان</option>
-    <option value="1">سنة واحدة</option>
-    <option value="2">سنتان</option>
-    <option value="3">ثلاث سنوات</option>
-    <option value="4">أربع سنوات</option>
-    <option value="5">خمس سنوات</option>
-  </select>
-  {form.warranty_date && (
-    <p className="text-xs text-gray-400 mt-1">ينتهي في: {form.warranty_date}</p>
-  )}
-</div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">انتهاء الضمان</label>
+              <input type="date" value={form.warranty_date} onChange={e => set('warranty_date', e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -140,6 +124,12 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
             </div>
             <input ref={fileRef} type="file" accept="image/*,application/pdf" onChange={handleFile} className="hidden" />
           </div>
+
+          {form.id && (
+            <div>
+              <MaintenanceSection productId={form.id} />
+            </div>
+          )}
         </div>
 
         <div className="sticky bottom-0 bg-white border-t border-gray-100 px-6 py-4 flex gap-3 rounded-b-2xl">
