@@ -153,10 +153,12 @@ export default function Dashboard() {
     } catch (e) {}
   }, [])
 
-  useEffect(() => {
+ useEffect(() => {
     if (authed) {
       load()
       loadPending()
+      const interval = setInterval(loadPending, 30000)
+      return () => clearInterval(interval)
     }
   }, [authed, load, loadPending])
 
