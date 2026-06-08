@@ -4,6 +4,55 @@ import { daysLeft, formatDate } from '../lib/utils'
 import { TagBadge, WarrantyBadge, Spinner } from '../components/UI'
 import ProductForm from '../components/ProductForm'
 import QRModal from '../components/QRModal'
+import TagsModal from '../components/TagsModal'
+
+const CORRECT_PASSWORD = '651983'
+const SESSION_KEY = 'vault_auth'
+
+function LoginScreen({ onLogin }) {
+  const [input, setInput] = useState('')
+  const [error, setError] = useState(false)
+  const [shake, setShake] = useState(false)
+
+  const handleSubmit = () => {
+    if (input === CORRECT_PASSWORD) {
+      sessionStorage.setItem(SESSION_KEY, '1')
+      onLogin()
+    } else {
+      setError(true)
+      setShake(true)
+      setInput('')
+      setTimeout(() => setShake(false), 500)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-[#f8f7f4] flex items-center justify-center p-4" dir="rtl">
+      <div className={`bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm transition-all ${shake ? 'translate-x-2' : ''}`}>
+        <div className="flex justify-center mb-6">
+          <div className="w-14 h-14 bg-gray-900 rounded-2xl flex items-center justify-center">
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </div>
+        </div>
+        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Product Vault</h1>
+        <p className="text-sm text-gray-400 text-center mb-6">أدخل كلمة المرور للمتابعة</p>
+        <input
+          type="password"
+          value={input}
+          onChange={e => { setInput(e.target.value); setError(false) }}
+          onKeyDown={e => e.key === 'Enter' && handleSubmit()}
+          placeholder="كلمة المرور"
+          className={`w-full border rounded-xl px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-gray-900 mb-3 ${error ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
+          autoFocus
+        />
+        {error && <p className="text-red-500 text-sm text-center mb-3">كلمة المرور غير صحيحة</p>}
+        <button onClick={handleSubmit} className="w-full py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+          دخول
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function ProductCard({ product, allTags, onEdit, onDelete, onViewQR }) {
   return (
@@ -71,6 +120,7 @@ function ProductCard({ product, allTags, onEdit, onDelete, onViewQR }) {
 }
 
 export default function Dashboard() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem(SESSION_KEY) === '1')
   const [products, setProducts] = useState([])
   const [tags, setTags] = useState([])
   const [loading, setLoading] = useState(true)
@@ -82,6 +132,7 @@ export default function Dashboard() {
   const [showForm, setShowForm] = useState(false)
   const [editProduct, setEditProduct] = useState(null)
   const [qrProduct, setQrProduct] = useState(null)
+  const [showTags, setShowTags] = useState(false)
   const [toast, setToast] = useState(null)
 
   const load = useCallback(async () => {
@@ -96,7 +147,9 @@ export default function Dashboard() {
     }
   }, [])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { if (authed) load() }, [authed, load])
+
+  if (!authed) return <LoginScreen onLogin={() => setAuthed(true)} />
 
   const showToast = (msg, type = 'success') => {
     setToast({ msg, type })
@@ -151,7 +204,8 @@ export default function Dashboard() {
         </div>
       )}
 
-      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />}
+      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />
+      {showTags && <TagsModal tags={tags} onClose={() => setShowTags(false)} onRefresh={load} />}
 
       {(showForm || editProduct) && (
         <ProductForm product={editProduct} allTags={tags}
@@ -171,11 +225,17 @@ export default function Dashboard() {
               <p className="text-xs text-gray-400">مخزن المنتجات الشخصي</p>
             </div>
           </div>
-          <button onClick={() => setShowForm(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
-            إضافة منتج
-          </button>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowForm(true)}
+              className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
+              إضافة منتج
+            </button>
+            <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false) }}
+              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تسجيل خروج">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -184,7 +244,6 @@ export default function Dashboard() {
           <div className="text-center py-20 text-red-500">{error}</div>
         ) : (
           <>
-            {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
               {[
                 { label: 'إجمالي المنتجات', value: stats.total, color: 'text-gray-900' },
@@ -199,7 +258,6 @@ export default function Dashboard() {
               ))}
             </div>
 
-            {/* Filters */}
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 mb-6 space-y-3">
               <div className="relative">
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2" strokeLinecap="round"/></svg>
@@ -233,7 +291,6 @@ export default function Dashboard() {
               <p className="text-xs text-gray-400">{filtered.length} منتج من أصل {products.length}</p>
             </div>
 
-            {/* Products */}
             {filtered.length === 0 ? (
               <div className="text-center py-20">
                 <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -245,6 +302,10 @@ export default function Dashboard() {
                 </p>
                 {!search && !filterTag && filterWarranty === 'all' && (
                   <button onClick={() => setShowForm(true)} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">إضافة منتج</button>
+            <button onClick={() => setShowTags(true)}
+              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التاغات">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
                 )}
               </div>
             ) : view === 'grid' ? (

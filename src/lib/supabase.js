@@ -53,3 +53,24 @@ export async function addTag(name) {
   const { error } = await supabase.from('tags').upsert({ name })
   if (error) throw error
 }
+
+export async function deleteTag(name) {
+  const { error } = await supabase.from('tags').delete().eq('name', name)
+  if (error) throw error
+}
+
+export async function renameTag(oldName, newName) {
+  // Add new tag
+  await supabase.from('tags').upsert({ name: newName })
+  // Update all products that have the old tag
+  const { data: products } = await supabase.from('products').select('id, tags')
+  for (const p of products || []) {
+    if (p.tags?.includes(oldName)) {
+      await supabase.from('products').update({
+        tags: p.tags.map(t => t === oldName ? newName : t)
+      }).eq('id', p.id)
+    }
+  }
+  // Delete old tag
+  await supabase.from('tags').delete().eq('name', oldName)
+}
