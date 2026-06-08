@@ -212,7 +212,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />
+      {qrProduct && <QRModal product={qrProduct} onClose={() => setQrProduct(null)} />}
       {showTags && <TagsModal tags={tags} onClose={() => setShowTags(false)} onRefresh={load} />}
 
       {(showForm || editProduct) && (
