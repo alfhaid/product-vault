@@ -106,7 +106,7 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">التاغز</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">التصنيفات</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {allTags.map(t => (
                 <button key={t} onClick={() => toggleTag(t)}
@@ -118,7 +118,7 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
             <div className="flex gap-2">
               <input value={tagInput} onChange={e => setTagInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAddCustomTag()}
-                placeholder="أضف تاغ جديد..."
+                placeholder="أضف تصنيف جديد..."
                 className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
               <button onClick={handleAddCustomTag} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-medium transition-colors">إضافة</button>
             </div>

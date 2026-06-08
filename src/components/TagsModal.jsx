@@ -18,7 +18,7 @@ export default function TagsModal({ tags, onClose, onRefresh }) {
   }
 
   const handleDelete = async (name) => {
-    if (!confirm(`حذف تاغ "${name}"؟ سيُحذف من جميع المنتجات.`)) return
+    if (!confirm(`حذف تصنيف "${name}"؟ سيُحذف من جميع المنتجات.`)) return
     setLoading(name)
     await deleteTag(name)
     await onRefresh()
@@ -39,14 +39,14 @@ export default function TagsModal({ tags, onClose, onRefresh }) {
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40 p-4" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md" onClick={e => e.stopPropagation()}>
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h2 className="font-bold text-gray-900 text-lg">إدارة التاغات</h2>
+          <h2 className="font-bold text-gray-900 text-lg">إدارة التصنيفات</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" strokeWidth="2" strokeLinecap="round"/></svg>
           </button>
         </div>
 
         <div className="p-6 space-y-2 max-h-80 overflow-y-auto">
-          {tags.length === 0 && <p className="text-gray-400 text-sm text-center py-4">لا توجد تاغات</p>}
+          {tags.length === 0 && <p className="text-gray-400 text-sm text-center py-4">لا توجد تصنيفات</p>}
           {tags.map(tag => (
             <div key={tag} className="flex items-center gap-2 p-2 rounded-xl hover:bg-gray-50 group">
               {editingTag === tag ? (
@@ -89,11 +89,11 @@ export default function TagsModal({ tags, onClose, onRefresh }) {
         </div>
 
         <div className="px-6 pb-6 border-t border-gray-100 pt-4">
-          <p className="text-xs font-semibold text-gray-600 mb-2">إضافة تاغ جديد</p>
+          <p className="text-xs font-semibold text-gray-600 mb-2">إضافة تصنيف جديد</p>
           <div className="flex gap-2">
             <input value={newTag} onChange={e => setNewTag(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleAdd()}
-              placeholder="اسم التاغ..."
+              placeholder="اسم التصنيف..."
               className="flex-1 border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
             <button onClick={handleAdd} disabled={loading === 'new' || !newTag.trim()}
               className="px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50">
