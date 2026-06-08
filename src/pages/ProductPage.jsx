@@ -47,7 +47,7 @@ export default function ProductPage() {
             <div className="w-7 h-7 bg-gray-900 rounded-lg flex items-center justify-center">
               <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
-            <span className="font-black text-gray-900">Product Vault</span>
+            <span className="font-black text-gray-900">FHD</span>
           </div>
         </div>
       </header>
