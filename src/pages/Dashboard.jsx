@@ -235,7 +235,7 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="font-black text-gray-900 text-lg leading-none">Fahad Alfhaid</h1>
-              <p className="text-xs text-gray-400">مرجعي الشخصي</p>
+              <p className="text-xs text-gray-400">2026</p>
             </div>
           </div>
           <div className="flex items-center gap-2">

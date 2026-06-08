@@ -127,7 +127,7 @@ export default function ProductPage() {
 
         {product.id && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mt-4">
-            <MaintenanceSection productId={product.id} />
+            <MaintenanceSection productId={product.id} readOnly={true} />
           </div>
         )}
 
