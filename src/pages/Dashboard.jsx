@@ -34,7 +34,7 @@ function LoginScreen({ onLogin }) {
             <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </div>
         </div>
-        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Product Vault</h1>
+        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Fahad Alfhaid</h1>
         <p className="text-sm text-gray-400 text-center mb-6">أدخل كلمة المرور للمتابعة</p>
         <input
           type="password"
@@ -221,8 +221,8 @@ export default function Dashboard() {
               <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </div>
             <div>
-              <h1 className="font-black text-gray-900 text-lg leading-none">Product Vault</h1>
-              <p className="text-xs text-gray-400">مخزن المنتجات الشخصي</p>
+              <h1 className="font-black text-gray-900 text-lg leading-none">Fahad Alfhaid</h1>
+              <p className="text-xs text-gray-400">2026</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
