@@ -270,13 +270,13 @@ export default function Dashboard() {
               <div className="relative">
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2" strokeLinecap="round"/></svg>
                 <input value={search} onChange={e => setSearch(e.target.value)}
-                  placeholder="ابحث بالاسم، التصنيف، المتجر..."
+                  placeholder="ابحث بالاسم، التاغ، المتجر..."
                   className="w-full pr-10 pl-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
               </div>
               <div className="flex flex-wrap gap-2">
                 <select value={filterTag} onChange={e => setFilterTag(e.target.value)}
                   className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
-                  <option value="">كل التصنيفات</option>
+                  <option value="">كل التاغز</option>
                   {tags.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
                 <select value={filterWarranty} onChange={e => setFilterWarranty(e.target.value)}
@@ -310,14 +310,14 @@ export default function Dashboard() {
                 </p>
                 {!search && !filterTag && filterWarranty === 'all' && (
                   <button onClick={() => setShowForm(true)} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">إضافة منتج</button>
-           <button onClick={() => setShowPending(!showPending)} className="relative p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="طلبات الصيانة">
+            <button onClick={() => setShowTags(true)}
+             <button onClick={() => setShowPending(!showPending)} className="relative p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="طلبات الصيانة">
   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
   {pendingMaintenance.length > 0 && (
     <span className="absolute -top-1 -left-1 w-4 h-4 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{pendingMaintenance.length}</span>
   )}
 </button>
-            <button onClick={() => setShowTags(true)}
-              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التصنيفات">
+             className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التاغات">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
                 )}
