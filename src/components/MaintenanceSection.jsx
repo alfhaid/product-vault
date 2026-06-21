@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getMaintenanceRecords, addMaintenanceRecord, deleteMaintenanceRecord } from '../lib/supabase'
-import { today, formatDate } from '../lib/utils'
+import { today, formatDate, daysSince } from '../lib/utils'
 
 export default function MaintenanceSection({ productId, readOnly = false }) {
   const [records, setRecords] = useState([])
@@ -12,7 +12,6 @@ export default function MaintenanceSection({ productId, readOnly = false }) {
 
   useEffect(() => {
     if (!productId) { setLoading(false); return }
-    // Public view shows only approved, dashboard shows all
     getMaintenanceRecords(productId, readOnly ? 'approved' : null)
       .then(setRecords)
       .finally(() => setLoading(false))
@@ -119,8 +118,8 @@ export default function MaintenanceSection({ productId, readOnly = false }) {
                   <p className="text-sm font-medium text-gray-800">{r.description}</p>
                   {!readOnly && statusBadge(r.status)}
                 </div>
-                <div className="flex items-center gap-3 mt-0.5">
-                  <span className="text-xs text-gray-400">{formatDate(r.date)}</span>
+                <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                  <span className="text-xs text-gray-400">{formatDate(r.date)} — منذ {daysSince(r.date)}</span>
                   {r.cost && <span className="text-xs text-gray-500 font-medium">{parseFloat(r.cost).toLocaleString()} ر.س</span>}
                 </div>
               </div>

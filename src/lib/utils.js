@@ -9,6 +9,24 @@ export const daysLeft = (warrantyDate) => {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
+export const daysSince = (dateStr) => {
+  if (!dateStr) return ''
+  const diff = new Date() - new Date(dateStr)
+  let totalDays = Math.floor(diff / (1000 * 60 * 60 * 24))
+
+  const years = Math.floor(totalDays / 365)
+  totalDays -= years * 365
+  const months = Math.floor(totalDays / 30)
+  const days = totalDays - months * 30
+
+  const parts = []
+  if (years > 0) parts.push(`${years} ${years === 1 ? 'سنة' : 'سنوات'}`)
+  if (months > 0) parts.push(`${months} ${months === 1 ? 'شهر' : 'أشهر'}`)
+  if (days > 0 || parts.length === 0) parts.push(`${days} ${days === 1 ? 'يوم' : 'أيام'}`)
+
+  return parts.join(' و')
+}
+
 export const uid = () => Math.random().toString(36).slice(2, 10).toUpperCase()
 
 export const getQRUrl = (id, size = 300) => {
