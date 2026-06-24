@@ -67,11 +67,13 @@ export default function ProductPage() {
     : warrantyStatus === 'expiring' ? 'الضمان على وشك الانتهاء'
     : 'المنتج لا يزال تحت الضمان'
 
+  const headerBg = 'linear-gradient(160deg, #3D2410 0%, #1A0F08 70%)'
+
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       <div className="max-w-2xl mx-auto">
-        {/* Header with wave decoration */}
-        <div className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #3D2410 0%, #1A0F08 70%)' }}>
+        {/* Header with wave decoration — background extends behind the curve */}
+        <div className="relative overflow-hidden" style={{ background: headerBg, paddingBottom: '24px' }}>
           <svg className="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 800 230" preserveAspectRatio="xMidYMid slice">
             <path d="M-40 40 Q 110 0, 230 35 T 470 25 T 720 40 T 880 30" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
             <path d="M-40 70 Q 130 30, 260 65 T 510 55 T 760 70 T 880 60" fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="2" />
@@ -90,12 +92,11 @@ export default function ProductPage() {
             </Link>
           </div>
 
-          <div className="relative z-10 px-5 pt-3 pb-7">
-            <p className="text-[14px] text-white/35 font-mono tracking-wider mb-2">#{product.id}</p>
+          <div className="relative z-10 px-5 pt-4 pb-2">
             <div className="flex items-center justify-between mb-3.5">
-              <h1 className="text-[32px] font-medium text-white tracking-tight">{product.name}</h1>
+              <h1 className="text-[32px] font-medium text-white tracking-tight leading-none">{product.name}</h1>
               <div className="flex items-center gap-2">
-                <span className="text-[17px] font-medium text-white/60 tracking-wider">FHD</span>
+                <span className="text-[17px] font-medium text-white/60 tracking-wider leading-none">FHD</span>
                 <img src="/header-icon.png" alt="FHD" className="w-9 h-9 rounded-full border border-white/30" />
               </div>
             </div>
@@ -106,10 +107,13 @@ export default function ProductPage() {
               </span>
             )}
           </div>
+
+          {/* Curve cut from the SAME dark background — no gap visible */}
+          <div className="absolute bottom-0 left-0 right-0 h-6 bg-[#f8f7f4]" style={{ borderRadius: '24px 24px 0 0' }} />
         </div>
 
-        {/* Sheet — different bg from page to reveal the rounded edge */}
-        <div className="bg-[#f8f7f4] rounded-t-[24px] px-4 pt-5 pb-4 relative z-10 -mt-px">
+        {/* Sheet content */}
+        <div className="bg-[#f8f7f4] px-4 pt-1 pb-4 relative z-10">
           {/* Stats row */}
           <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             <div className="bg-white rounded-2xl px-3.5 py-3">
