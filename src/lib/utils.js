@@ -1,7 +1,7 @@
 export const today = () => new Date().toISOString().split('T')[0]
 
 export const formatDate = (d) =>
-  d ? new Date(d).toLocaleDateString('ar-SA', { year: 'numeric', month: 'short', day: 'numeric' }) : '—'
+  d ? new Date(d).toLocaleDateString('en-GB', { year: 'numeric', month: '2-digit', day: '2-digit', calendar: 'gregory' }) : '—'
 
 export const daysLeft = (warrantyDate) => {
   if (!warrantyDate) return null
