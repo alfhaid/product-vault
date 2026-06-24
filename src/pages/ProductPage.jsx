@@ -179,8 +179,8 @@ export default function ProductPage() {
             </div>
           )}
 
-          {/* Calendar reminder */}
-          {product.warranty_date && (
+          {/* Calendar reminder — only when warranty is still active */}
+          {product.warranty_date && warrantyStatus !== 'expired' && (
             <button
               onClick={() => downloadICS(product)}
               className="flex items-center gap-2 px-4 py-3 bg-white rounded-2xl text-[17px] font-medium text-gray-700 hover:bg-gray-50 transition-colors w-full justify-center mb-3.5">
