@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { getProduct } from '../lib/supabase'
 import { formatDate, daysLeft } from '../lib/utils'
 import { TagBadge, WarrantyBadge, Spinner } from '../components/UI'
+import { downloadICS } from '../lib/calendar'
 import MaintenanceSection from '../components/MaintenanceSection'
 
 export default function ProductPage() {
@@ -44,9 +45,7 @@ export default function ProductPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </Link>
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-gray-900 rounded-lg flex items-center justify-center">
-              <svg className="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
+            <img src="/header-icon.png" alt="FHD" className="w-7 h-7 rounded-full" />
             <span className="font-black text-gray-900">FHD</span>
           </div>
         </div>
@@ -124,6 +123,17 @@ export default function ProductPage() {
             </div>
           )}
         </div>
+
+        {product.warranty_date && (
+          <div className="mx-6 mb-5">
+            <button
+              onClick={() => downloadICS(product)}
+              className="flex items-center gap-2 px-4 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors w-full justify-center">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              أضف تذكير الضمان للتقويم
+            </button>
+          </div>
+        )}
 
         {product.id && (
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mt-4">
