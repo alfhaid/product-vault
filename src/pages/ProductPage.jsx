@@ -67,6 +67,13 @@ export default function ProductPage() {
     : warrantyStatus === 'expiring' ? 'الضمان على وشك الانتهاء'
     : 'المنتج لا يزال تحت الضمان'
 
+  const warrantyColors = {
+    expired:  { border: '#D14343', iconBg: '#FBE7E7', iconFg: '#8A1F1F' },
+    expiring: { border: '#D85A30', iconBg: '#FAECE7', iconFg: '#712B13' },
+    active:   { border: '#3B8F5C', iconBg: '#E7F5EC', iconFg: '#1F6B3D' },
+  }
+  const wc = warrantyStatus ? warrantyColors[warrantyStatus] : null
+
   const headerBg = 'linear-gradient(160deg, #3D2410 0%, #1A0F08 70%)'
 
   return (
@@ -129,10 +136,10 @@ export default function ProductPage() {
           </div>
 
           {/* Warranty card — always shown when warranty_date exists */}
-          {warrantyText && (
-            <div className="bg-white rounded-2xl px-4 py-3.5 mb-3.5 flex items-center gap-3" style={{ borderRight: '2.5px solid #D85A30' }}>
-              <div className="w-8 h-8 rounded-full bg-[#FAECE7] flex items-center justify-center flex-shrink-0">
-                <svg className="w-4 h-4 text-[#712B13]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          {warrantyText && wc && (
+            <div className="bg-white rounded-2xl px-4 py-3.5 mb-3.5 flex items-center gap-3" style={{ borderRight: `2.5px solid ${wc.border}` }}>
+              <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: wc.iconBg }}>
+                <svg className="w-4 h-4" style={{ color: wc.iconFg }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </div>
               <div>
                 <p className="text-[15.5px] font-medium text-gray-900">{warrantyText}</p>
