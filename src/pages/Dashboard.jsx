@@ -266,7 +266,7 @@ export default function Dashboard() {
       )}
 
       {/* Header — dark gradient with wave decoration, unified with product page theme */}
-      <div className="relative overflow-hidden sticky top-0 z-30" style={{ background: headerBg, paddingBottom: '20px' }}>
+      <div className="relative overflow-hidden sticky top-0 z-30" style={{ background: headerBg, paddingBottom: '60px' }}>
         <svg className="absolute inset-0 w-full h-full opacity-50" viewBox="0 0 800 230" preserveAspectRatio="xMidYMid slice">
           <path d="M-40 30 Q 110 -10, 230 25 T 470 15 T 720 30 T 880 20" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
           <path d="M-40 60 Q 130 20, 260 55 T 510 45 T 760 60 T 880 50" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
@@ -275,7 +275,7 @@ export default function Dashboard() {
           <circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.12)" />
         </svg>
 
-        <div className="max-w-6xl mx-auto px-4 pt-5 pb-3 relative z-10 flex items-center justify-between gap-4">
+        <div className="max-w-6xl mx-auto px-4 pt-7 pb-3 relative z-10 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5">
             <div className="relative w-9 h-9 rounded-full border border-white/30 flex items-center justify-center flex-shrink-0">
               <img src="/header-icon.png" alt="FHD" className="w-9 h-9 rounded-full" />
@@ -313,7 +313,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-5 bg-[#f8f7f4]" style={{ borderRadius: '20px 20px 0 0' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-6 bg-[#f8f7f4]" style={{ borderRadius: '24px 24px 0 0' }} />
       </div>
 
       <main className="max-w-6xl mx-auto px-4 pt-4 pb-6 bg-[#f8f7f4]">
