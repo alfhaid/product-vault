@@ -48,7 +48,7 @@ function LoginScreen({ onLogin }) {
             <img src="/header-icon.png" alt="FHD" className="w-14 h-14 rounded-full" />
           </div>
         </div>
-        <h1 className="text-xl font-black text-gray-900 text-center mb-1">Fahad Alfhaid</h1>
+        <h1 className="text-3xl text-gray-900 text-center mb-1" style={{ fontFamily: "'Petit Formal Script', cursive" }}>Fahad Alfhaid</h1>
         <p className="text-sm text-gray-400 text-center mb-6">أدخل كلمة المرور للمتابعة</p>
         <input
           type="password"
@@ -292,7 +292,7 @@ export default function Dashboard() {
               <img src="/header-icon.png" alt="FHD" className="w-9 h-9 rounded-full" />
             </div>
             <div>
-              <h1 className="font-semibold text-white text-base leading-tight">Fahad Alfhaid</h1>
+              <h1 className="text-white text-2xl leading-tight" style={{ fontFamily: "'Petit Formal Script', cursive" }}>Fahad Alfhaid</h1>
               <p className="text-[11px] text-white/40">2026</p>
             </div>
           </div>
