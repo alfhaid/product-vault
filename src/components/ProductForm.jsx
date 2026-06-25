@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { today, uid } from '../lib/utils'
 import { TagBadge } from './UI'
 import MaintenanceSection from './MaintenanceSection'
+import RiyalSymbol from './RiyalSymbol'
 
 export default function ProductForm({ product, allTags, onSave, onCancel, onAddTag }) {
   const [form, setForm] = useState(product ? {
@@ -67,32 +68,15 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
             </div>
             <div>
-  <label className="block text-sm font-semibold text-gray-700 mb-1">مدة الضمان</label>
-  <select
-    onChange={e => {
-      if (!e.target.value) { set('warranty_date', ''); return }
-      const base = form.purchase_date || new Date().toISOString().split('T')[0]
-      const d = new Date(base)
-      d.setFullYear(d.getFullYear() + parseInt(e.target.value))
-      set('warranty_date', d.toISOString().split('T')[0])
-    }}
-    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
-    <option value="">بدون ضمان</option>
-    <option value="1">سنة واحدة</option>
-    <option value="2">سنتان</option>
-    <option value="3">ثلاث سنوات</option>
-    <option value="4">أربع سنوات</option>
-    <option value="5">خمس سنوات</option>
-  </select>
-  {form.warranty_date && (
-    <p className="text-xs text-gray-400 mt-1">ينتهي في: {form.warranty_date}</p>
-  )}
-</div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1">انتهاء الضمان</label>
+              <input type="date" value={form.warranty_date} onChange={e => set('warranty_date', e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">السعر (ر.س)</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-1 flex items-center gap-1">السعر (<RiyalSymbol />)</label>
               <input type="number" value={form.price} onChange={e => set('price', e.target.value)}
                 placeholder="0.00"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
@@ -106,7 +90,7 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">التصنيفات</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">التاغز</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {allTags.map(t => (
                 <button key={t} onClick={() => toggleTag(t)}
@@ -118,7 +102,7 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
             <div className="flex gap-2">
               <input value={tagInput} onChange={e => setTagInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAddCustomTag()}
-                placeholder="أضف تصنيف جديد..."
+                placeholder="أضف تاغ جديد..."
                 className="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
               <button onClick={handleAddCustomTag} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-xl text-sm font-medium transition-colors">إضافة</button>
             </div>

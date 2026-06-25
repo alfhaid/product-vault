@@ -5,6 +5,7 @@ import { formatDate, daysLeft, arabicDayPhrase } from '../lib/utils'
 import { Spinner } from '../components/UI'
 import { downloadICS } from '../lib/calendar'
 import MaintenanceSection from '../components/MaintenanceSection'
+import RiyalSymbol from '../components/RiyalSymbol'
 
 const CATEGORY_ICON_PATHS = {
   'السيارة': 'M5 17h14M5 17a2 2 0 100 4 2 2 0 000-4zm14 0a2 2 0 100 4 2 2 0 000-4zM5 17l1.5-7h11L19 17M6.5 10l1-3h9l1 3',
@@ -79,7 +80,6 @@ export default function ProductPage() {
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       <div className="max-w-2xl mx-auto">
-        {/* Header with wave decoration */}
         <div className="relative overflow-hidden" style={{ background: headerBg, paddingBottom: '24px' }}>
           <svg className="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 800 230" preserveAspectRatio="xMidYMid slice">
             <path d="M-40 40 Q 110 0, 230 35 T 470 25 T 720 40 T 880 30" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
@@ -118,9 +118,7 @@ export default function ProductPage() {
           <div className="absolute bottom-0 left-0 right-0 h-6 bg-[#f8f7f4]" style={{ borderRadius: '24px 24px 0 0' }} />
         </div>
 
-        {/* Sheet content */}
         <div className="bg-[#f8f7f4] px-4 pt-1 pb-4 relative z-10">
-          {/* Row 1: Purchase date + Store (merged, no big gap) */}
           <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             <div className="bg-white rounded-2xl px-3.5 py-3">
               <p className="text-[13px] text-gray-400 mb-1 tracking-wide">تاريخ الشراء</p>
@@ -132,7 +130,6 @@ export default function ProductPage() {
             </div>
           </div>
 
-          {/* Warranty card — calendar icon embedded at far left when active/expiring */}
           {warrantyText && wc && (
             <div className="bg-white rounded-2xl px-4 py-3.5 mb-3.5 flex items-center gap-3" style={{ borderRight: `3.5px solid ${wc.border}` }}>
               <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: wc.iconBg }}>
@@ -152,7 +149,6 @@ export default function ProductPage() {
             </div>
           )}
 
-          {/* Notes */}
           {product.notes && (
             <div className="bg-white rounded-2xl px-4 py-3 mb-3.5">
               <p className="text-[13px] text-gray-400 mb-1.5 tracking-wide">ملاحظات</p>
@@ -160,7 +156,6 @@ export default function ProductPage() {
             </div>
           )}
 
-          {/* Invoice */}
           {product.invoice_file && (
             <div className="bg-white rounded-2xl px-4 py-3.5 mb-3.5">
               <p className="text-[13px] text-gray-400 mb-2 tracking-wide">الفاتورة</p>
@@ -182,7 +177,6 @@ export default function ProductPage() {
             </div>
           )}
 
-          {/* Maintenance section — includes total at bottom */}
           {product.id && (
             <div className="bg-white rounded-2xl p-4">
               <MaintenanceSection

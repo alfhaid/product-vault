@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getMaintenanceRecords, addMaintenanceRecord, deleteMaintenanceRecord } from '../lib/supabase'
 import { today, formatDate, daysSince } from '../lib/utils'
+import RiyalSymbol from './RiyalSymbol'
 
 export default function MaintenanceSection({
   productId,
@@ -89,7 +90,7 @@ export default function MaintenanceSection({
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-[13px] font-medium text-gray-600 mb-1 block">التكلفة (ر.س)</label>
+              <label className="text-[13px] font-medium text-gray-600 mb-1 block">التكلفة (<RiyalSymbol />)</label>
               <input type="number" value={form.cost} onChange={e => setForm(f => ({ ...f, cost: e.target.value }))}
                 placeholder="0"
                 className="w-full border border-gray-200 rounded-xl px-3 py-2 text-[15px] focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white" />
@@ -139,7 +140,11 @@ export default function MaintenanceSection({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {r.cost && <span className="text-[15px] font-medium text-gray-700">{parseFloat(r.cost).toLocaleString()} ر.س</span>}
+                  {r.cost && (
+                    <span className="text-[15px] font-medium text-gray-700 flex items-center gap-1">
+                      {parseFloat(r.cost).toLocaleString()} <RiyalSymbol />
+                    </span>
+                  )}
                   {!readOnly && (
                     <button onClick={() => handleDelete(r.id)}
                       className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 rounded-lg text-red-400 transition-all">
@@ -154,8 +159,8 @@ export default function MaintenanceSection({
           {totalCost !== null && (
             <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-100">
               <span className="text-[14px] text-gray-500">إجمالي الصيانة</span>
-              <span className="text-[18px] font-semibold" style={{ color: accentColor }}>
-                {totalCost.toLocaleString()} ر.س
+              <span className="text-[18px] font-semibold flex items-center gap-1" style={{ color: accentColor }}>
+                {totalCost.toLocaleString()} <RiyalSymbol />
               </span>
             </div>
           )}

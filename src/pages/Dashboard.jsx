@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getProducts, getTags, upsertProduct, deleteProduct, addTag } from '../lib/supabase'
-import { getPendingMaintenance, approveMaintenance, deleteMaintenanceRecord } from '../lib/supabase'
+import { getPendingMaintenance, approveMaintenance, deleteMaintenanceRecord, getMaintenanceRecords } from '../lib/supabase'
+import RiyalSymbol from '../components/RiyalSymbol'
+import { downloadICS } from '../lib/calendar'
 import { daysLeft, formatDate } from '../lib/utils'
 import { TagBadge, WarrantyBadge, Spinner } from '../components/UI'
 import ProductForm from '../components/ProductForm'
@@ -64,6 +66,11 @@ function ProductCard({ product, allTags, onEdit, onDelete, onViewQR }) {
           <p className="text-xs text-gray-400 font-mono mt-0.5">#{product.id}</p>
         </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          {product.warranty_date && (
+            <button onClick={() => downloadICS(product)} className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors text-blue-400" title="أضف للتقويم">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          )}
           <button onClick={() => onViewQR(product)} className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-500" title="QR">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" strokeWidth="2"/><rect x="14" y="3" width="7" height="7" rx="1" strokeWidth="2"/><rect x="3" y="14" width="7" height="7" rx="1" strokeWidth="2"/><path d="M14 14h.01M18 14h.01M14 18h.01M18 18h.01M14 21h.01M21 14h.01M21 18h.01M21 21h.01" strokeWidth="2"/></svg>
           </button>
@@ -92,7 +99,7 @@ function ProductCard({ product, allTags, onEdit, onDelete, onViewQR }) {
         {product.price && (
           <div>
             <span className="text-gray-400">السعر</span>
-            <p className="text-gray-700 font-medium">{parseFloat(product.price).toLocaleString()} ر.س</p>
+            <p className="text-gray-700 font-medium flex items-center gap-1">{parseFloat(product.price).toLocaleString()} <RiyalSymbol /></p>
           </div>
         )}
         {product.store && (
@@ -153,12 +160,10 @@ export default function Dashboard() {
     } catch (e) {}
   }, [])
 
- useEffect(() => {
+  useEffect(() => {
     if (authed) {
       load()
       loadPending()
-      const interval = setInterval(loadPending, 30000)
-      return () => clearInterval(interval)
     }
   }, [authed, load, loadPending])
 
@@ -182,6 +187,38 @@ export default function Dashboard() {
     await deleteProduct(id)
     setProducts(p => p.filter(x => x.id !== id))
     showToast('تم الحذف', 'error')
+  }
+
+
+  const handleExport = async () => {
+    const allProducts = await Promise.all(
+      products.map(async (p) => {
+        const maintenance = await getMaintenanceRecords(p.id)
+        return {
+          ...p,
+          invoice_file: undefined,
+          maintenance: maintenance.map(m => ({
+            date: m.date,
+            description: m.description,
+            cost: m.cost,
+            status: m.status,
+          }))
+        }
+      })
+    )
+    const data = {
+      export_date: new Date().toISOString().split('T')[0],
+      total_products: allProducts.length,
+      products: allProducts,
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `product-vault-backup-${data.export_date}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    showToast('تم تصدير البيانات ✓')
   }
 
   const handleAddTag = async (tag) => {
@@ -235,7 +272,7 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="font-black text-gray-900 text-lg leading-none">Fahad Alfhaid</h1>
-              <p className="text-xs text-gray-400">2026</p>
+              <p className="text-xs text-gray-400">مرجعي الشخصي</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -254,6 +291,10 @@ export default function Dashboard() {
             <button onClick={() => setShowTags(true)}
               className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التصنيفات">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+            <button onClick={handleExport}
+              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تصدير البيانات">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false) }}
               className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تسجيل خروج">
@@ -286,7 +327,7 @@ export default function Dashboard() {
                           <p className="text-sm text-gray-600">{r.description}</p>
                           <div className="flex gap-3 mt-0.5">
                             <span className="text-xs text-gray-400">{r.date}</span>
-                            {r.cost && <span className="text-xs text-gray-500">{parseFloat(r.cost).toLocaleString()} ر.س</span>}
+                            {r.cost && <span className="text-xs text-gray-500 inline-flex items-center gap-1">{parseFloat(r.cost).toLocaleString()} <RiyalSymbol /></span>}
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -316,13 +357,13 @@ export default function Dashboard() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
               {[
                 { label: 'إجمالي المنتجات', value: stats.total, color: 'text-gray-900' },
-                { label: 'إجمالي القيمة', value: `${stats.totalValue.toLocaleString()} ر.س`, color: 'text-gray-900' },
+                { label: 'إجمالي القيمة', value: stats.totalValue.toLocaleString(), suffix: 'riyal', color: 'text-gray-900' },
                 { label: 'ضمان ينتهي قريباً', value: stats.expiring, color: 'text-orange-600' },
                 { label: 'ضمان منتهي', value: stats.expired, color: 'text-red-600' },
               ].map(s => (
                 <div key={s.label} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
                   <p className="text-xs text-gray-400 mb-1">{s.label}</p>
-                  <p className={`text-xl font-black ${s.color}`}>{s.value}</p>
+                  <p className={`text-xl font-black ${s.color} flex items-center gap-1`}>{s.value}{s.suffix === 'riyal' && <RiyalSymbol />}</p>
                 </div>
               ))}
             </div>
@@ -393,7 +434,7 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-xs text-gray-400">{formatDate(p.purchase_date)}</span>
-                        {p.price && <span className="text-xs text-gray-500 font-medium">{parseFloat(p.price).toLocaleString()} ر.س</span>}
+                        {p.price && <span className="text-xs text-gray-500 font-medium inline-flex items-center gap-1">{parseFloat(p.price).toLocaleString()} <RiyalSymbol /></span>}
                         {p.store && <span className="text-xs text-gray-400">{p.store}</span>}
                       </div>
                     </div>
