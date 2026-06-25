@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProduct, getMaintenanceRecords } from '../lib/supabase'
-import { formatDate, daysLeft } from '../lib/utils'
+import { formatDate, daysLeft, arabicDayPhrase } from '../lib/utils'
 import { Spinner } from '../components/UI'
 import { downloadICS } from '../lib/calendar'
 import MaintenanceSection from '../components/MaintenanceSection'
@@ -59,9 +59,9 @@ export default function ProductPage() {
   const days = daysLeft(product.warranty_date)
   const warrantyStatus = days === null ? null : days < 0 ? 'expired' : days <= 30 ? 'expiring' : 'active'
   const warrantyText = days === null ? null
-    : days < 0 ? `انتهى الضمان منذ ${Math.abs(days)} يوم`
+    : days < 0 ? `انتهى الضمان منذ ${arabicDayPhrase(Math.abs(days))}`
     : days === 0 ? 'الضمان ينتهي اليوم!'
-    : `متبقي على الضمان ${days} يوم`
+    : `متبقي على الضمان ${arabicDayPhrase(days)}`
   const warrantySub = days === null ? null
     : warrantyStatus === 'expired' ? 'يمكنك تسجيل طلبات الصيانة'
     : warrantyStatus === 'expiring' ? 'الضمان على وشك الانتهاء'
@@ -79,7 +79,7 @@ export default function ProductPage() {
   return (
     <div className="min-h-screen bg-white" dir="rtl">
       <div className="max-w-2xl mx-auto">
-        {/* Header with wave decoration — background extends behind the curve */}
+        {/* Header with wave decoration */}
         <div className="relative overflow-hidden" style={{ background: headerBg, paddingBottom: '24px' }}>
           <svg className="absolute inset-0 w-full h-full opacity-55" viewBox="0 0 800 230" preserveAspectRatio="xMidYMid slice">
             <path d="M-40 40 Q 110 0, 230 35 T 470 25 T 720 40 T 880 30" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
@@ -115,44 +115,40 @@ export default function ProductPage() {
             )}
           </div>
 
-          {/* Curve cut from the SAME dark background — no gap visible */}
           <div className="absolute bottom-0 left-0 right-0 h-6 bg-[#f8f7f4]" style={{ borderRadius: '24px 24px 0 0' }} />
         </div>
 
         {/* Sheet content */}
         <div className="bg-[#f8f7f4] px-4 pt-1 pb-4 relative z-10">
-          {/* Stats row */}
+          {/* Row 1: Purchase date + Store (merged, no big gap) */}
           <div className="grid grid-cols-2 gap-2.5 mb-3.5">
             <div className="bg-white rounded-2xl px-3.5 py-3">
               <p className="text-[13px] text-gray-400 mb-1 tracking-wide">تاريخ الشراء</p>
               <p className="text-[19px] font-medium text-gray-900">{formatDate(product.purchase_date)}</p>
             </div>
             <div className="bg-white rounded-2xl px-3.5 py-3">
-              <p className="text-[13px] text-gray-400 mb-1 tracking-wide">إجمالي الصيانة</p>
-              <p className="text-[19px] font-medium text-gray-900">
-                {totalMaintenanceCost === null ? '—' : `${totalMaintenanceCost.toLocaleString()} ر.س`}
-              </p>
+              <p className="text-[13px] text-gray-400 mb-1 tracking-wide">المتجر / المورد</p>
+              <p className="text-[17px] font-medium text-gray-900 truncate">{product.store || '—'}</p>
             </div>
           </div>
 
-          {/* Warranty card — always shown when warranty_date exists */}
+          {/* Warranty card — calendar icon embedded at far left when active/expiring */}
           {warrantyText && wc && (
             <div className="bg-white rounded-2xl px-4 py-3.5 mb-3.5 flex items-center gap-3" style={{ borderRight: `3.5px solid ${wc.border}` }}>
               <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: wc.iconBg }}>
                 <svg className="w-4 h-4" style={{ color: wc.iconFg }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-[15.5px] font-medium text-gray-900">{warrantyText}</p>
                 <p className="text-[13.5px] text-gray-500 mt-0.5">{warrantySub}</p>
               </div>
-            </div>
-          )}
-
-          {/* Store / extra info */}
-          {product.store && (
-            <div className="bg-white rounded-2xl px-4 py-3 mb-3.5 flex items-center justify-between">
-              <span className="text-[14px] text-gray-400">المتجر / المورد</span>
-              <span className="text-[17px] font-medium text-gray-800">{product.store}</span>
+              {warrantyStatus !== 'expired' && (
+                <button onClick={() => downloadICS(product)}
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ml-auto hover:opacity-80 transition-opacity"
+                  style={{ backgroundColor: wc.iconBg }} title="أضف تذكير الضمان للتقويم">
+                  <svg className="w-4 h-4" style={{ color: wc.iconFg }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                </button>
+              )}
             </div>
           )}
 
@@ -186,20 +182,16 @@ export default function ProductPage() {
             </div>
           )}
 
-          {/* Calendar reminder — only when warranty is still active */}
-          {product.warranty_date && warrantyStatus !== 'expired' && (
-            <button
-              onClick={() => downloadICS(product)}
-              className="flex items-center gap-2 px-4 py-3 bg-white rounded-2xl text-[17px] font-medium text-gray-700 hover:bg-gray-50 transition-colors w-full justify-center mb-3.5">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              أضف تذكير الضمان للتقويم
-            </button>
-          )}
-
-          {/* Maintenance section */}
+          {/* Maintenance section — includes total at bottom */}
           {product.id && (
             <div className="bg-white rounded-2xl p-4">
-              <MaintenanceSection productId={product.id} readOnly={true} accentColor="#D85A30" accentBg="#FAECE7" />
+              <MaintenanceSection
+                productId={product.id}
+                readOnly={true}
+                accentColor="#D85A30"
+                accentBg="#FAECE7"
+                totalCost={totalMaintenanceCost}
+              />
             </div>
           )}
 

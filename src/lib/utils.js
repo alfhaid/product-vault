@@ -9,6 +9,32 @@ export const daysLeft = (warrantyDate) => {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
+// Arabic number-noun agreement rule (قاعدة العدد والمعدود)
+// 1 -> "يوم", 2 -> "يومان", 3-10 -> "N أيام", 11+ -> "N يوم"
+export function arabicDayPhrase(n) {
+  const abs = Math.abs(n)
+  if (abs === 1) return 'يوم'
+  if (abs === 2) return 'يومان'
+  if (abs >= 3 && abs <= 10) return `${abs} أيام`
+  return `${abs} يوم`
+}
+
+export function arabicMonthPhrase(n) {
+  const abs = Math.abs(n)
+  if (abs === 1) return 'شهر'
+  if (abs === 2) return 'شهران'
+  if (abs >= 3 && abs <= 10) return `${abs} أشهر`
+  return `${abs} شهر`
+}
+
+export function arabicYearPhrase(n) {
+  const abs = Math.abs(n)
+  if (abs === 1) return 'سنة'
+  if (abs === 2) return 'سنتان'
+  if (abs >= 3 && abs <= 10) return `${abs} سنوات`
+  return `${abs} سنة`
+}
+
 export const daysSince = (dateStr) => {
   if (!dateStr) return ''
   const diff = new Date() - new Date(dateStr)
@@ -20,9 +46,9 @@ export const daysSince = (dateStr) => {
   const days = totalDays - months * 30
 
   const parts = []
-  if (years > 0) parts.push(`${years} ${years === 1 ? 'سنة' : 'سنوات'}`)
-  if (months > 0) parts.push(`${months} ${months === 1 ? 'شهر' : 'أشهر'}`)
-  if (days > 0 || parts.length === 0) parts.push(`${days} ${days === 1 ? 'يوم' : 'أيام'}`)
+  if (years > 0) parts.push(arabicYearPhrase(years))
+  if (months > 0) parts.push(arabicMonthPhrase(months))
+  if (days > 0 || parts.length === 0) parts.push(arabicDayPhrase(days))
 
   return parts.join(' و')
 }

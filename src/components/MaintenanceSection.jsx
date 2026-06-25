@@ -2,7 +2,13 @@ import { useState, useEffect } from 'react'
 import { getMaintenanceRecords, addMaintenanceRecord, deleteMaintenanceRecord } from '../lib/supabase'
 import { today, formatDate, daysSince } from '../lib/utils'
 
-export default function MaintenanceSection({ productId, readOnly = false, accentColor = '#111827', accentBg = '#F3F4F6' }) {
+export default function MaintenanceSection({
+  productId,
+  readOnly = false,
+  accentColor = '#111827',
+  accentBg = '#F3F4F6',
+  totalCost = null,
+}) {
   const [records, setRecords] = useState([])
   const [loading, setLoading] = useState(true)
   const [showAdd, setShowAdd] = useState(false)
@@ -48,7 +54,10 @@ export default function MaintenanceSection({ productId, readOnly = false, accent
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <label className="block text-[17px] font-medium text-gray-700">سجل الصيانة</label>
+        <label className="flex items-center gap-1.5 text-[17px] font-medium" style={{ color: accentColor }}>
+          <svg className="w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          سجل الصيانة
+        </label>
         {!submitted && (
           <button onClick={() => setShowAdd(!showAdd)}
             className="w-8 h-8 rounded-full flex items-center justify-center text-lg font-semibold transition-transform hover:scale-105"
@@ -112,33 +121,45 @@ export default function MaintenanceSection({ productId, readOnly = false, accent
           لا توجد سجلات صيانة
         </p>
       ) : (
-        <div className="space-y-2">
-          {records.map((r, i) => (
-            <div key={r.id} className={`flex items-start gap-3 p-3 rounded-xl border group ${statusColor(r.status)}`}>
-              <div className="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center text-[12px] font-medium text-gray-500 flex-shrink-0">
-                {i + 1}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-[17px] font-medium text-gray-800">{r.description}</p>
-                  {!readOnly && statusBadge(r.status)}
+        <>
+          <div className="space-y-2">
+            {records.map((r, i) => (
+              <div key={r.id} className={`flex items-start gap-3 p-3 rounded-xl border group ${statusColor(r.status)}`}>
+                <div className="w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-semibold flex-shrink-0"
+                  style={{ backgroundColor: accentBg, color: accentColor }}>
+                  {i + 1}
                 </div>
-                <div className="flex items-center gap-3 mt-0.5 flex-wrap">
-                  <span className="text-[15px] text-gray-400">{formatDate(r.date)} — منذ {daysSince(r.date)}</span>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="text-[17px] font-medium text-gray-800">{r.description}</p>
+                    {!readOnly && statusBadge(r.status)}
+                  </div>
+                  <div className="flex items-center gap-3 mt-0.5 flex-wrap">
+                    <span className="text-[15px] text-gray-400">{formatDate(r.date)} — منذ {daysSince(r.date)}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {r.cost && <span className="text-[15px] font-medium text-gray-700">{parseFloat(r.cost).toLocaleString()} ر.س</span>}
+                  {!readOnly && (
+                    <button onClick={() => handleDelete(r.id)}
+                      className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 rounded-lg text-red-400 transition-all">
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </button>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {r.cost && <span className="text-[15px] font-medium text-gray-700">{parseFloat(r.cost).toLocaleString()} ر.س</span>}
-                {!readOnly && (
-                  <button onClick={() => handleDelete(r.id)}
-                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-50 rounded-lg text-red-400 transition-all">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </button>
-                )}
-              </div>
+            ))}
+          </div>
+
+          {totalCost !== null && (
+            <div className="flex items-center justify-between pt-3 mt-1 border-t border-gray-100">
+              <span className="text-[14px] text-gray-500">إجمالي الصيانة</span>
+              <span className="text-[18px] font-semibold" style={{ color: accentColor }}>
+                {totalCost.toLocaleString()} ر.س
+              </span>
             </div>
-          ))}
-        </div>
+          )}
+        </>
       )}
     </div>
   )
