@@ -49,7 +49,6 @@ function LoginScreen({ onLogin }) {
           </div>
         </div>
         <h1 className="text-3xl text-gray-900 text-center mb-1" style={{ fontFamily: "'Petit Formal Script', cursive" }}>Fahad Alfhaid</h1>
-        <p className="text-sm text-gray-400 text-center mb-6">أدخل كلمة المرور للمتابعة</p>
         <input
           type="password"
           value={input}
