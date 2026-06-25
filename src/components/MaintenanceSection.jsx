@@ -54,7 +54,7 @@ export default function MaintenanceSection({
   return (
     <div>
       <div className="flex items-center justify-between mb-3">
-        <label className="flex items-center gap-1.5 text-[17px] font-medium" style={{ color: accentColor }}>
+        <label className="flex items-center gap-1.5 text-[17px] font-medium" style={{ color: accentColor, fontFamily: "'Tajawal', sans-serif" }}>
           <svg className="w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
           سجل الصيانة
         </label>
