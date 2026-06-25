@@ -127,7 +127,7 @@ export default function ProductPage() {
               <p className="text-[19px] font-medium text-gray-900">{formatDate(product.purchase_date)}</p>
             </div>
             <div className="bg-white rounded-2xl px-3.5 py-3">
-              <p className="text-[13px] text-gray-400 mb-1 tracking-wide">المتجر / المورد</p>
+              <p className="text-[13px] text-gray-400 mb-1 tracking-wide">المتجر</p>
               <p className="text-[17px] font-medium text-gray-900 truncate">{product.store || '—'}</p>
             </div>
           </div>
