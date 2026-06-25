@@ -30,8 +30,19 @@ function LoginScreen({ onLogin }) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8f7f4] flex items-center justify-center p-4" dir="rtl">
-      <div className={`bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm transition-all ${shake ? 'translate-x-2' : ''}`}>
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" dir="rtl" style={{ background: 'linear-gradient(160deg, #3D2410 0%, #1A0F08 70%)' }}>
+      <svg className="absolute inset-0 w-full h-full opacity-50" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+        <path d="M-40 60 Q 110 10, 230 65 T 470 45 T 720 70 T 880 50" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
+        <path d="M-40 130 Q 130 80, 260 135 T 510 105 T 760 140 T 880 110" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+        <path d="M-40 480 Q 150 430, 290 485 T 550 455 T 800 490 T 880 460" fill="none" stroke="rgba(216,90,48,0.3)" strokeWidth="2" />
+        <path d="M-40 540 Q 170 490, 310 545 T 570 515 T 820 550 T 880 520" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="2" />
+        <circle cx="640" cy="40" r="3" fill="rgba(216,90,48,0.5)" />
+        <circle cx="80" cy="500" r="2" fill="rgba(255,255,255,0.15)" />
+        <circle cx="730" cy="520" r="3" fill="rgba(216,90,48,0.35)" />
+        <circle cx="40" cy="100" r="2" fill="rgba(255,255,255,0.12)" />
+      </svg>
+
+      <div className={`relative z-10 rounded-2xl p-8 w-full max-w-sm transition-all ${shake ? 'translate-x-2' : ''}`} style={{ backgroundColor: 'rgba(255,255,255,0.97)' }}>
         <div className="flex justify-center mb-6">
           <div className="relative w-16 h-16 rounded-full border-2 border-gray-900 flex items-center justify-center">
             <img src="/header-icon.png" alt="FHD" className="w-14 h-14 rounded-full" />
@@ -45,11 +56,11 @@ function LoginScreen({ onLogin }) {
           onChange={e => { setInput(e.target.value); setError(false) }}
           onKeyDown={e => e.key === 'Enter' && handleSubmit()}
           placeholder="كلمة المرور"
-          className={`w-full border rounded-xl px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:ring-2 focus:ring-gray-900 mb-3 ${error ? 'border-red-400 bg-red-50' : 'border-gray-200'}`}
+          className={`w-full border rounded-xl px-4 py-3 text-center text-lg tracking-widest focus:outline-none focus:ring-2 mb-3 ${error ? 'border-red-400 bg-red-50 focus:ring-red-400' : 'border-gray-200 focus:ring-[#D85A30]'}`}
           autoFocus
         />
         {error && <p className="text-red-500 text-sm text-center mb-3">كلمة المرور غير صحيحة</p>}
-        <button onClick={handleSubmit} className="w-full py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-700 transition-colors">
+        <button onClick={handleSubmit} className="w-full py-3 text-white rounded-xl font-semibold hover:opacity-90 transition-colors" style={{ backgroundColor: '#D85A30' }}>
           دخول
         </button>
       </div>
