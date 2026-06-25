@@ -19,6 +19,14 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
   const toggleTag = (t) => set('tags', form.tags.includes(t) ? form.tags.filter(x => x !== t) : [...form.tags, t])
 
+  const handleWarrantyDuration = (years) => {
+    if (!years) { set('warranty_date', ''); return }
+    const base = form.purchase_date || today()
+    const d = new Date(base)
+    d.setFullYear(d.getFullYear() + parseInt(years))
+    set('warranty_date', d.toISOString().split('T')[0])
+  }
+
   const handleFile = (e) => {
     const file = e.target.files[0]
     if (!file) return
@@ -78,9 +86,20 @@ export default function ProductForm({ product, allTags, onSave, onCancel, onAddT
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30]" />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1">انتهاء الضمان</label>
-              <input type="date" value={form.warranty_date} onChange={e => set('warranty_date', e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30]" />
+              <label className="block text-sm font-semibold text-gray-700 mb-1">مدة الضمان</label>
+              <select
+                onChange={e => handleWarrantyDuration(e.target.value)}
+                className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30] bg-white">
+                <option value="">بدون ضمان</option>
+                <option value="1">سنة واحدة</option>
+                <option value="2">سنتان</option>
+                <option value="3">ثلاث سنوات</option>
+                <option value="4">أربع سنوات</option>
+                <option value="5">خمس سنوات</option>
+              </select>
+              {form.warranty_date && (
+                <p className="text-xs text-gray-400 mt-1">ينتهي في: {form.warranty_date}</p>
+              )}
             </div>
           </div>
 
