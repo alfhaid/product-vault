@@ -48,7 +48,7 @@ function LoginScreen({ onLogin }) {
             <img src="/header-icon.png" alt="FHD" className="w-14 h-14 rounded-full" />
           </div>
         </div>
-        <h1 className="text-3xl text-gray-900 text-center mb-1" style={{ fontFamily: "'Petit Formal Script', cursive" }}>Fahad Alfhaid</h1>
+        <h1 className="text-3xl text-gray-900 text-center mb-6" style={{ fontFamily: "'Petit Formal Script', cursive" }}>Fahad Alfhaid</h1>
         <input
           type="password"
           value={input}
