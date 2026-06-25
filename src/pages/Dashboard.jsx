@@ -287,10 +287,9 @@ export default function Dashboard() {
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setShowForm(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors text-white hover:opacity-90"
-              style={{ backgroundColor: '#D85A30' }}>
+              className="p-2.5 rounded-xl text-white transition-colors hover:opacity-90"
+              style={{ backgroundColor: '#D85A30' }} title="إضافة منتج">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
-              إضافة منتج
             </button>
             <button onClick={() => setShowPending(!showPending)}
               className="relative p-2.5 border border-white/15 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors" title="طلبات الصيانة">
