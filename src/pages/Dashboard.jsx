@@ -33,8 +33,8 @@ function LoginScreen({ onLogin }) {
     <div className="min-h-screen bg-[#f8f7f4] flex items-center justify-center p-4" dir="rtl">
       <div className={`bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm transition-all ${shake ? 'translate-x-2' : ''}`}>
         <div className="flex justify-center mb-6">
-          <div className="w-14 h-14 bg-gray-900 rounded-2xl flex items-center justify-center">
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <div className="relative w-16 h-16 rounded-full border-2 border-gray-900 flex items-center justify-center">
+            <img src="/header-icon.png" alt="FHD" className="w-14 h-14 rounded-full" />
           </div>
         </div>
         <h1 className="text-xl font-black text-gray-900 text-center mb-1">Fahad Alfhaid</h1>
@@ -67,7 +67,7 @@ function ProductCard({ product, allTags, onEdit, onDelete, onViewQR }) {
         </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
           {product.warranty_date && (
-            <button onClick={() => downloadICS(product)} className="p-1.5 hover:bg-blue-50 rounded-lg transition-colors text-blue-400" title="أضف للتقويم">
+            <button onClick={() => downloadICS(product)} className="p-1.5 hover:bg-[#FAECE7] rounded-lg transition-colors text-[#D85A30]" title="أضف للتقويم">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
           )}
@@ -189,7 +189,6 @@ export default function Dashboard() {
     showToast('تم الحذف', 'error')
   }
 
-
   const handleExport = async () => {
     const allProducts = await Promise.all(
       products.map(async (p) => {
@@ -246,8 +245,10 @@ export default function Dashboard() {
     totalValue: products.reduce((s, p) => s + (parseFloat(p.price) || 0), 0),
   }
 
+  const headerBg = 'linear-gradient(160deg, #3D2410 0%, #1A0F08 70%)'
+
   return (
-    <div className="min-h-screen bg-[#f8f7f4]" dir="rtl">
+    <div className="min-h-screen bg-white" dir="rtl">
       {toast && (
         <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full text-sm font-semibold shadow-lg ${toast.type === 'error' ? 'bg-red-600 text-white' : 'bg-gray-900 text-white'}`}>
           {toast.msg}
@@ -264,47 +265,59 @@ export default function Dashboard() {
           onAddTag={handleAddTag} />
       )}
 
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      {/* Header — dark gradient with wave decoration, unified with product page theme */}
+      <div className="relative overflow-hidden sticky top-0 z-30" style={{ background: headerBg, paddingBottom: '20px' }}>
+        <svg className="absolute inset-0 w-full h-full opacity-50" viewBox="0 0 800 230" preserveAspectRatio="xMidYMid slice">
+          <path d="M-40 30 Q 110 -10, 230 25 T 470 15 T 720 30 T 880 20" fill="none" stroke="rgba(216,90,48,0.5)" strokeWidth="2" />
+          <path d="M-40 60 Q 130 20, 260 55 T 510 45 T 760 60 T 880 50" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="2" />
+          <path d="M-40 95 Q 150 60, 290 95 T 550 85 T 800 100 T 880 90" fill="none" stroke="rgba(216,90,48,0.25)" strokeWidth="2" />
+          <circle cx="640" cy="10" r="3" fill="rgba(216,90,48,0.4)" />
+          <circle cx="80" cy="80" r="2" fill="rgba(255,255,255,0.12)" />
+        </svg>
+
+        <div className="max-w-6xl mx-auto px-4 pt-5 pb-3 relative z-10 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2.5">
+            <div className="relative w-9 h-9 rounded-full border border-white/30 flex items-center justify-center flex-shrink-0">
+              <img src="/header-icon.png" alt="FHD" className="w-9 h-9 rounded-full" />
             </div>
             <div>
-              <h1 className="font-black text-gray-900 text-lg leading-none">Fahad Alfhaid</h1>
-              <p className="text-xs text-gray-400">مرجعي الشخصي</p>
+              <h1 className="font-semibold text-white text-base leading-tight">Fahad Alfhaid</h1>
+              <p className="text-[11px] text-white/40">2026</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setShowForm(true)}
-              className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors text-white hover:opacity-90"
+              style={{ backgroundColor: '#D85A30' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" strokeWidth="2.5" strokeLinecap="round"/></svg>
               إضافة منتج
             </button>
             <button onClick={() => setShowPending(!showPending)}
-              className="relative p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="طلبات الصيانة">
+              className="relative p-2.5 border border-white/15 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors" title="طلبات الصيانة">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
               {pendingMaintenance.length > 0 && (
-                <span className="absolute -top-1 -left-1 w-4 h-4 bg-orange-500 text-white text-xs rounded-full flex items-center justify-center font-bold">{pendingMaintenance.length}</span>
+                <span className="absolute -top-1 -left-1 w-4 h-4 bg-[#F0A04B] text-white text-xs rounded-full flex items-center justify-center font-bold">{pendingMaintenance.length}</span>
               )}
             </button>
             <button onClick={() => setShowTags(true)}
-              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="إدارة التصنيفات">
+              className="p-2.5 border border-white/15 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors" title="إدارة التصنيفات">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             <button onClick={handleExport}
-              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تصدير البيانات">
+              className="p-2.5 border border-white/15 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors" title="تصدير البيانات">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
             <button onClick={() => { sessionStorage.removeItem(SESSION_KEY); setAuthed(false) }}
-              className="p-2.5 border border-gray-200 rounded-xl text-gray-400 hover:text-gray-600 hover:bg-gray-50 transition-colors" title="تسجيل خروج">
+              className="p-2.5 border border-white/15 rounded-xl text-white/70 hover:text-white hover:bg-white/5 transition-colors" title="تسجيل خروج">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
             </button>
           </div>
         </div>
-      </header>
 
-      <main className="max-w-6xl mx-auto px-4 py-6">
+        <div className="absolute bottom-0 left-0 right-0 h-5 bg-[#f8f7f4]" style={{ borderRadius: '20px 20px 0 0' }} />
+      </div>
+
+      <main className="max-w-6xl mx-auto px-4 pt-4 pb-6 bg-[#f8f7f4]">
         {loading ? <Spinner /> : error ? (
           <div className="text-center py-20 text-red-500">{error}</div>
         ) : (
@@ -353,19 +366,24 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Stats */}
+            {/* Stats — themed cards: dark / green / orange / red */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-              {[
-                { label: 'إجمالي المنتجات', value: stats.total, color: 'text-gray-900' },
-                { label: 'إجمالي القيمة', value: stats.totalValue.toLocaleString(), suffix: 'riyal', color: 'text-gray-900' },
-                { label: 'ضمان ينتهي قريباً', value: stats.expiring, color: 'text-orange-600' },
-                { label: 'ضمان منتهي', value: stats.expired, color: 'text-red-600' },
-              ].map(s => (
-                <div key={s.label} className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
-                  <p className="text-xs text-gray-400 mb-1">{s.label}</p>
-                  <p className={`text-xl font-black ${s.color} flex items-center gap-1`}>{s.value}{s.suffix === 'riyal' && <RiyalSymbol />}</p>
-                </div>
-              ))}
+              <div className="rounded-2xl p-4 shadow-sm" style={{ background: headerBg }}>
+                <p className="text-xs text-white/40 mb-1">إجمالي المنتجات</p>
+                <p className="text-xl font-black text-white">{stats.total}</p>
+              </div>
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+                <p className="text-xs text-gray-400 mb-1">إجمالي القيمة</p>
+                <p className="text-xl font-black text-[#1F6B3D] flex items-center gap-1">{stats.totalValue.toLocaleString()}<RiyalSymbol /></p>
+              </div>
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+                <p className="text-xs text-gray-400 mb-1">ضمان ينتهي قريباً</p>
+                <p className="text-xl font-black text-[#D85A30]">{stats.expiring}</p>
+              </div>
+              <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+                <p className="text-xs text-gray-400 mb-1">ضمان منتهي</p>
+                <p className="text-xl font-black text-[#D14343]">{stats.expired}</p>
+              </div>
             </div>
 
             {/* Filters */}
@@ -374,16 +392,16 @@ export default function Dashboard() {
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" strokeWidth="2" strokeLinecap="round"/></svg>
                 <input value={search} onChange={e => setSearch(e.target.value)}
                   placeholder="ابحث بالاسم، التصنيف، المتجر..."
-                  className="w-full pr-10 pl-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-gray-900" />
+                  className="w-full pr-10 pl-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30]" />
               </div>
               <div className="flex flex-wrap gap-2">
                 <select value={filterTag} onChange={e => setFilterTag(e.target.value)}
-                  className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
+                  className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30] bg-white">
                   <option value="">كل التصنيفات</option>
                   {tags.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
                 <select value={filterWarranty} onChange={e => setFilterWarranty(e.target.value)}
-                  className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 bg-white">
+                  className="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#D85A30] bg-white">
                   <option value="all">كل المنتجات</option>
                   <option value="active">ضمان ساري</option>
                   <option value="expiring">ينتهي خلال 30 يوم</option>
@@ -391,10 +409,10 @@ export default function Dashboard() {
                   <option value="none">بدون ضمان</option>
                 </select>
                 <div className="flex gap-1 mr-auto">
-                  <button onClick={() => setView('grid')} className={`p-2 rounded-lg transition-colors ${view === 'grid' ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-100'}`}>
+                  <button onClick={() => setView('grid')} className={`p-2 rounded-lg transition-colors ${view === 'grid' ? 'text-white' : 'text-gray-400 hover:bg-gray-100'}`} style={view === 'grid' ? { backgroundColor: '#D85A30' } : {}}>
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>
                   </button>
-                  <button onClick={() => setView('list')} className={`p-2 rounded-lg transition-colors ${view === 'list' ? 'bg-gray-900 text-white' : 'text-gray-400 hover:bg-gray-100'}`}>
+                  <button onClick={() => setView('list')} className={`p-2 rounded-lg transition-colors ${view === 'list' ? 'text-white' : 'text-gray-400 hover:bg-gray-100'}`} style={view === 'list' ? { backgroundColor: '#D85A30' } : {}}>
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" strokeWidth="2" strokeLinecap="round"/></svg>
                   </button>
                 </div>
@@ -413,7 +431,7 @@ export default function Dashboard() {
                   {search || filterTag || filterWarranty !== 'all' ? 'جرب تغيير البحث أو الفلاتر' : 'ابدأ بإضافة منتجك الأول'}
                 </p>
                 {!search && !filterTag && filterWarranty === 'all' && (
-                  <button onClick={() => setShowForm(true)} className="px-5 py-2.5 bg-gray-900 text-white rounded-xl text-sm font-semibold hover:bg-gray-700 transition-colors">إضافة منتج</button>
+                  <button onClick={() => setShowForm(true)} className="px-5 py-2.5 text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-colors" style={{ backgroundColor: '#D85A30' }}>إضافة منتج</button>
                 )}
               </div>
             ) : view === 'grid' ? (
