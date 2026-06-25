@@ -1,4 +1,4 @@
-import { TAG_COLORS, daysLeft } from '../lib/utils'
+import { TAG_COLORS, daysLeft, arabicDurationPhrase } from '../lib/utils'
 
 export function TagBadge({ tag, allTags = [], onRemove }) {
   const idx = allTags.indexOf(tag) % TAG_COLORS.length
@@ -17,8 +17,8 @@ export function WarrantyBadge({ warrantyDate }) {
   const days = daysLeft(warrantyDate)
   if (days === null) return null
   if (days < 0) return <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-300 font-semibold">منتهي الضمان</span>
-  if (days <= 30) return <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-300 font-semibold">ينتهي خلال {days} يوم</span>
-  return <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-300 font-semibold">{days} يوم متبقي</span>
+  if (days <= 30) return <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 border border-orange-300 font-semibold">ينتهي خلال {arabicDurationPhrase(days)}</span>
+  return <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-300 font-semibold">{arabicDurationPhrase(days)} متبقي</span>
 }
 
 export function Spinner() {

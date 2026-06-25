@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { getProduct, getMaintenanceRecords } from '../lib/supabase'
-import { formatDate, daysLeft, arabicDayPhrase } from '../lib/utils'
+import { formatDate, daysLeft, arabicDurationPhrase } from '../lib/utils'
 import { Spinner } from '../components/UI'
 import { downloadICS } from '../lib/calendar'
 import MaintenanceSection from '../components/MaintenanceSection'
@@ -60,9 +60,9 @@ export default function ProductPage() {
   const days = daysLeft(product.warranty_date)
   const warrantyStatus = days === null ? null : days < 0 ? 'expired' : days <= 30 ? 'expiring' : 'active'
   const warrantyText = days === null ? null
-    : days < 0 ? `انتهى الضمان منذ ${arabicDayPhrase(Math.abs(days))}`
+    : days < 0 ? `انتهى الضمان منذ ${arabicDurationPhrase(Math.abs(days))}`
     : days === 0 ? 'الضمان ينتهي اليوم!'
-    : `متبقي على الضمان ${arabicDayPhrase(days)}`
+    : `متبقي على الضمان ${arabicDurationPhrase(days)}`
   const warrantySub = days === null ? null
     : warrantyStatus === 'expired' ? 'يمكنك تسجيل طلبات الصيانة'
     : warrantyStatus === 'expiring' ? 'الضمان على وشك الانتهاء'

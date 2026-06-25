@@ -35,10 +35,12 @@ export function arabicYearPhrase(n) {
   return `${abs} سنة`
 }
 
-export const daysSince = (dateStr) => {
-  if (!dateStr) return ''
-  const diff = new Date() - new Date(dateStr)
-  let totalDays = Math.floor(diff / (1000 * 60 * 60 * 24))
+// Converts a total number of days into "X سنوات و Y أشهر و Z أيام" using
+// proper Arabic number-noun agreement at every level (year/month/day).
+// Used for both "منذ" (elapsed time, e.g. maintenance records) and
+// "متبقي على الضمان" (remaining warranty time).
+export function arabicDurationPhrase(totalDaysInput) {
+  let totalDays = Math.abs(Math.round(totalDaysInput))
 
   const years = Math.floor(totalDays / 365)
   totalDays -= years * 365
@@ -51,6 +53,13 @@ export const daysSince = (dateStr) => {
   if (days > 0 || parts.length === 0) parts.push(arabicDayPhrase(days))
 
   return parts.join(' و')
+}
+
+export const daysSince = (dateStr) => {
+  if (!dateStr) return ''
+  const diff = new Date() - new Date(dateStr)
+  const totalDays = Math.floor(diff / (1000 * 60 * 60 * 24))
+  return arabicDurationPhrase(totalDays)
 }
 
 export const uid = () => Math.random().toString(36).slice(2, 10).toUpperCase()
