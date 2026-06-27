@@ -24,6 +24,7 @@ export default function ProductPage() {
   const [error, setError] = useState(null)
   const [showInvoice, setShowInvoice] = useState(false)
   const [totalMaintenanceCost, setTotalMaintenanceCost] = useState(null)
+  const [maintenanceRecords, setMaintenanceRecords] = useState(null)
 
   useEffect(() => {
     getProduct(id)
@@ -34,12 +35,18 @@ export default function ProductPage() {
 
   useEffect(() => {
     if (!product?.id) return
-    getMaintenanceRecords(product.id)
+    // Single fetch — shared between the total cost display and MaintenanceSection
+    // (passed down as initialRecords to avoid a second network call)
+    getMaintenanceRecords(product.id, 'approved')
       .then(records => {
+        setMaintenanceRecords(records)
         const total = records.reduce((sum, r) => sum + (parseFloat(r.cost) || 0), 0)
         setTotalMaintenanceCost(total)
       })
-      .catch(() => setTotalMaintenanceCost(0))
+      .catch(() => {
+        setMaintenanceRecords([])
+        setTotalMaintenanceCost(0)
+      })
   }, [product?.id])
 
   if (loading) return <div className="min-h-screen bg-white flex items-center justify-center"><Spinner /></div>
@@ -185,6 +192,7 @@ export default function ProductPage() {
                 accentColor="#D85A30"
                 accentBg="#FAECE7"
                 totalCost={totalMaintenanceCost}
+                initialRecords={maintenanceRecords}
               />
             </div>
           )}

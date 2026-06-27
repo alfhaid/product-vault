@@ -9,20 +9,22 @@ export default function MaintenanceSection({
   accentColor = '#111827',
   accentBg = '#F3F4F6',
   totalCost = null,
+  initialRecords = null, // if provided, skips the internal fetch (avoids duplicate network calls)
 }) {
-  const [records, setRecords] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [records, setRecords] = useState(initialRecords || [])
+  const [loading, setLoading] = useState(initialRecords === null)
   const [showAdd, setShowAdd] = useState(false)
   const [form, setForm] = useState({ description: '', cost: '', date: today() })
   const [saving, setSaving] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
   useEffect(() => {
+    if (initialRecords !== null) return // data already provided by parent — skip fetch
     if (!productId) { setLoading(false); return }
     getMaintenanceRecords(productId, readOnly ? 'approved' : null)
       .then(setRecords)
       .finally(() => setLoading(false))
-  }, [productId, readOnly])
+  }, [productId, readOnly, initialRecords])
 
   const handleAdd = async () => {
     if (!form.description.trim()) return
