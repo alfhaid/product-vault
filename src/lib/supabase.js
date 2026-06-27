@@ -8,9 +8,11 @@ export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 // ── Products ──────────────────────────────────────────────────────────────────
 
 export async function getProducts() {
+  // Excludes invoice_file (base64 image data) from the list view for performance —
+  // it's only needed when opening a single product, not when listing all products.
   const { data, error } = await supabase
     .from('products')
-    .select('*')
+    .select('id, name, purchase_date, warranty_date, price, store, notes, tags, invoice_name, created_at')
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
